@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Proyecto de Grafos - Alessandro Quenallata</title>
+<style>
+    body{font-family:'Segoe UI', sans-serif; margin:0; background:#f0f2f5; color:#333; overflow-x: hidden;}
+    
+    /* NAVEGACIÓN */
+    nav{background:#2c3e50; padding:8px; display:flex; gap:12px; justify-content:center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000;}
+    nav button{
+        padding:8px 25px; border:none; border-radius:5px; cursor:pointer; 
+        background:#34495e; color:white; font-size:16px; transition:0.3s;
+    }
+    nav button.active-btn{background:#16a085; font-weight:bold;}
+
+    section{display:none; padding:10px; text-align:center;}
+    section.active{display:flex; flex-direction:column; align-items:center; justify-content: flex-start;}
+
+    /* TARJETAS Y CONTENIDO */
+    .cover-card {
+        background: white; width: 95%; max-width: 950px; padding: 20px;
+        border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        text-align: center; margin-top: 10px; margin-bottom: 20px;
+    }
+
+    .cover-title { color: #008000; font-size: 56px; margin: 0 0 10px 0; text-decoration: underline; font-weight: bold; }
+    .cover-subtitle { font-size: 28px; color: #000; margin: 0; line-height: 1.2; font-weight: bold; }
+    .cover-logo { margin: 20px auto; display: block; max-width: 450px; height: auto; }
+    .cover-student { margin-top: 20px; font-size: 26px; font-weight: bold; color: #000; text-decoration: underline; }
+
+    /* SECCIÓN ALGORITMOS */
+    .text-content { text-align: left; font-size: 19px; line-height: 1.6; color: #2c3e50; padding: 10px 30px; }
+    .text-content h2 { color: #16a085; border-left: 5px solid #16a085; padding-left: 15px; margin-top: 25px; font-size: 24px;}
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 20px; border-radius: 10px; background: #000; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+    /* EDITOR DE GRAFOS */
+    #canvas{border:3px solid #bdc3c7; background:white; margin-top:10px; border-radius: 10px; cursor: crosshair;}
+    .controls{margin:10px 0; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;}
+    .btn-control { background: #95a5a6; color:white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
+    .modoActivo{background:#e74c3c !important;}
+    
+    /* ELEMENTOS SVG */
+    .edge { fill: none !important; stroke-linecap: round; }
+    .node-rect{stroke-width:3; stroke:#333; transition: all 0.2s;}
+    .node-label{font-size:16px; font-weight:bold; fill:white; text-anchor:middle; dominant-baseline:middle; pointer-events: none;}
+    .weight{font-size:18px; fill:red; font-weight:bold; paint-order:stroke; stroke:white; stroke-width:4px;}
+
+    /* MATRIZ */
+    #matrix-container { margin-top: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 95%; max-width: 900px; overflow-x: auto;}
+    .adj-table { border-collapse: collapse; margin: 0 auto; font-size: 16px; width: 100%;}
+    .adj-table th, .adj-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    .cell-active { background: #c8e6c9 !important; font-weight: bold; }
+    .header-cell { background: #eee !important; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<nav>
+    <button onclick="show('caratula', this)" class="active-btn">Carátula</button>
+    <button onclick="show('algoritmos', this)">Algoritmos</button>
+    <button onclick="show('grafos', this)">Grafos</button>
+</nav>
+
+<section id="caratula" class="active">
+    <div class="cover-card">
+        <h1 class="cover-title">Análisis de Algoritmos</h1>
+        <div class="cover-subtitle">MAT-361 | Paralelo 1 | I-2026</div>
+        <img src="logo.png" alt="Logo UCB" class="cover-logo" onerror="this.src='https://lpz.ucb.edu.bo/wp-content/uploads/2020/09/Logo-UCB-LP-2020.png';">
+        <div class="cover-student">Estudiante: Alessandro Ronald Quenallata Condori</div>
+    </div>
+</section>
+
+<section id="algoritmos">
+    <div class="cover-card">
+        <div class="text-content">
+            <h1 style="font-size: 40px; color: #16a085; text-align: center; text-decoration: underline;">Fundamentos de Algoritmos</h1>
+            <h2>1. ¿Qué es un Algoritmo?</h2>
+            <p>Un algoritmo es una <strong>secuencia lógica, finita y ordenada de pasos</strong> que permite solucionar un problema o alcanzar un objetivo específico. No es algo exclusivo de las computadoras; es una metodología que aplicamos a diario. En computación, el algoritmo es el "cerebro" detrás de cada proceso.</p>
+            <h2>2. Definición Técnica y Atributos</h2>
+            <p>En ingeniería y ciencias de la computación, un algoritmo funcional debe cumplir estrictamente con: Entrada, Proceso, Salida, Finitud y Efectividad.</p>
+            <h2>3. Estructuras Lógicas</h2>
+            <p>Los algoritmos organizan el flujo de pensamiento mediante tres estructuras principales: Secuencia, Decisión (Si/No) y Repetición (Bucles).</p>
+            <h2>4. Algoritmos Aplicados a Grafos</h2>
+            <p>En el estudio de redes, los algoritmos son vitales para la optimización. Los recorridos definen cómo una computadora visita cada nodo de forma ordenada. La optimización permite resolver problemas complejos, como encontrar la ruta más corta entre dos puntos.</p>
+            <h2>5. Material de Apoyo</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/vnNFiNVy9KM" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="grafos">
+    <h2 style="font-size: 32px; margin-bottom: 10px;">Editor de Grafos e Interconectividad</h2>
+    <div class="controls">
+        <label>Peso: <input id="peso" type="number" value="1" style="width:60px;"></label>
+        <label><input id="dirigida" type="checkbox" checked> Dirigida</label>
+        <button id="btnNodo" class="btn-control" onclick="modoNodo()">Crear nodo</button>
+        <button id="btnArista" class="btn-control" onclick="modoArista()">Crear arista</button>
+        <button id="btnNombre" class="btn-control" onclick="modoNombrar()">Nombrar nodo</button>
+        <button class="btn-control" style="background:#e67e22;" onclick="generarMatriz()">Generar Matriz</button>
+        <button class="btn-control" style="background:#e74c3c;" onclick="limpiarCanvas()">Limpiar</button>
+    </div>
+    
+    <svg id="canvas" width="1000" height="550">
+        <defs>
+            <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#34495e" />
+            </marker>
+        </defs>
+    </svg>
+
+    <div id="matrix-container" style="display: none;">
+        <h3>Matriz de Adyacencia</h3>
+        <div id="table-wrapper"></div>
+        <div id="stats-wrapper" style="text-align: left; margin-top: 15px; font-weight: bold;"></div>
+        <p style="font-size: 14px; margin-top: 10px; color: #7f8c8d;">Hecho por Alessandro Ronald Quenallata Condori</p>
+    </div>
+</section>
+
+<script>
+    function show(id, btn){
+        document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active-btn"));
+        btn.classList.add("active-btn");
+    }
+
+    const svg=document.getElementById("canvas");
+    let nodes=[], edges=[], selectedNode=null, modoActual=null;
+
+    function modoNodo(){ modoActual="nodo"; actualizarUI(); }
+    function modoArista(){ modoActual="arista"; actualizarUI(); }
+    function modoNombrar(){ modoActual="nombrar"; actualizarUI(); }
+    
+    function actualizarUI(){
+        document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("modoActivo"));
+        if(modoActual==="nodo") document.getElementById("btnNodo").classList.add("modoActivo");
+        if(modoActual==="arista") document.getElementById("btnArista").classList.add("modoActivo");
+        if(modoActual==="nombrar") document.getElementById("btnNombre").classList.add("modoActivo");
+        if(selectedNode !== null) nodes[selectedNode].rect.style.stroke = "#333";
+        selectedNode = null;
+    }
+
+    function limpiarCanvas(){ 
+        const defs = svg.querySelector("defs");
+        svg.innerHTML = ''; svg.appendChild(defs);
+        nodes = []; edges = []; 
+        document.getElementById("matrix-container").style.display = "none";
+        actualizarUI(); 
+    }
+
+    svg.addEventListener("click",e=>{
+        if(modoActual!=="nodo" || e.target !== svg) return;
+        const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+        const loc=pt.matrixTransform(svg.getScreenCTM().inverse());
+        createNode(loc.x, loc.y);
+    });
+
+    function createNode(x,y){
+        const id=nodes.length;
+        const group = document.createElementNS("http://www.w3.org/2000/svg","g");
+        const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+        rect.setAttribute("class","node-rect"); rect.setAttribute("fill", "#2c3e50"); rect.setAttribute("rx", 10); 
+        const label = document.createElementNS("http://www.w3.org/2000/svg","text");
+        label.setAttribute("class","node-label"); label.textContent = id;
+        group.appendChild(rect); group.appendChild(label); svg.appendChild(group);
+        const nodeObj = { id, x, y, rect, label, name: id.toString(), group };
+        nodes.push(nodeObj);
+        actualizarTamañoNodo(nodeObj);
+        group.addEventListener("click", ev => { ev.stopPropagation(); nodeClicked(id); });
+    }
+
+    function actualizarTamañoNodo(node) {
+        const bbox = node.label.getBBox();
+        const width = Math.max(60, bbox.width + 30);
+        const height = 45;
+        node.rect.setAttribute("width", width); node.rect.setAttribute("height", height);
+        node.rect.setAttribute("x", node.x - width/2); node.rect.setAttribute("y", node.y - height/2);
+        node.label.setAttribute("x", node.x); node.label.setAttribute("y", node.y);
+        node.w = width; node.h = height;
+    }
+
+    function nodeClicked(id){
+        if(modoActual==="nombrar"){
+            const n = prompt("Nuevo nombre:", nodes[id].name);
+            if(n !== null){ 
+                nodes[id].name=n; nodes[id].label.textContent=n; 
+                actualizarTamañoNodo(nodes[id]); 
+                redibujarAristas(); // ESTA ES LA CLAVE PARA ADECUAR LAS FLECHAS
+            }
+        } else if(modoActual==="arista"){
+            if(selectedNode === null){ selectedNode = id; nodes[id].rect.style.stroke = "red";
+            } else { drawEdge(selectedNode, id); actualizarUI(); }
+        }
+    }
+
+    function redibujarAristas() {
+        const currentEdges = [...edges];
+        // Limpiar aristas y pesos del DOM, pero no del array
+        document.querySelectorAll('.edge, .weight').forEach(el => el.remove());
+        edges = [];
+        currentEdges.forEach(e => {
+            // Solo procesamos las originales para evitar duplicar por las no dirigidas
+            if (e.original) drawEdge(e.from, e.to, e.weight, e.dirigida, true);
+        });
+    }
+
+    function getIntersection(node, targetX, targetY) {
+        const w = node.w / 2, h = node.h / 2;
+        const dx = targetX - node.x, dy = targetY - node.y;
+        const scale = Math.min(w / Math.abs(dx), h / Math.abs(dy));
+        return { x: node.x + dx * scale, y: node.y + dy * scale };
+    }
+
+    function drawEdge(a, b, pOverride=null, dOverride=null, isRedraw=false){
+        const peso = pOverride || document.getElementById("peso").value || 1;
+        const dirigida = dOverride !== null ? dOverride : document.getElementById("dirigida").checked;
+        const n1 = nodes[a], n2 = nodes[b];
+        const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("class","edge"); path.setAttribute("stroke", "#34495e"); path.setAttribute("stroke-width", "3");
+        
+        let d, end;
+        if(a === b){ // Bucle
+            d = `M ${n1.x-10} ${n1.y-nodeH(n1)} C ${n1.x-40} ${n1.y-80}, ${n1.x+40} ${n1.y-80}, ${n1.x+10} ${n1.y-nodeH(n1)}`;
+        } else {
+            const yaExisteIda = edges.find(e => e.from === b && e.to === a);
+            if(yaExisteIda){ 
+                const mx = (n1.x + n2.x)/2, my = (n1.y + n2.y)/2;
+                const dx = n2.x - n1.x, dy = n2.y - n1.y;
+                const len = Math.sqrt(dx*dx + dy*dy) || 1;
+                const cx = mx + (-dy/len) * 50, cy = my + (dx/len) * 50;
+                end = getIntersection(n2, cx, cy);
+                d = `M ${n1.x} ${n1.y} Q ${cx} ${cy} ${end.x} ${end.y}`;
+            } else {
+                end = getIntersection(n2, n1.x, n1.y);
+                d = `M ${n1.x} ${n1.y} L ${end.x} ${end.y}`;
+            }
+        }
+        
+        path.setAttribute("d", d);
+        if(dirigida) path.setAttribute("marker-end", "url(#arrowhead)");
+        svg.insertBefore(path, svg.firstChild);
+        
+        const pathLen = path.getTotalLength();
+        const mid = path.getPointAtLength(pathLen / 2);
+        const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+        txt.setAttribute("class","weight"); txt.setAttribute("x", mid.x); txt.setAttribute("y", mid.y - 10);
+        txt.setAttribute("text-anchor", "middle"); txt.textContent = peso;
+        svg.appendChild(txt);
+
+        edges.push({from: a, to: b, weight: parseFloat(peso), dirigida, original: true});
+        if(!dirigida) edges.push({from: b, to: a, weight: parseFloat(peso), dirigida, original: false});
+    }
+
+    function nodeH(n) { return n.h / 2; }
+
+    function generarMatriz() {
+        if (nodes.length === 0) return;
+        const container = document.getElementById("matrix-container");
+        const wrapper = document.getElementById("table-wrapper");
+        const stats = document.getElementById("stats-wrapper");
+        container.style.display = "block";
+
+        let html = `<table class="adj-table"><tr><th></th>`;
+        nodes.forEach(n => html += `<th class="header-cell">${n.name}</th>`);
+        html += `<th style="color:blue">Σ Fila</th><th style="color:green">Count</th></tr>`;
+
+        let colSums = new Array(nodes.length).fill(0), colCounts = new Array(nodes.length).fill(0);
+        let maxFS=0, maxCS=0, maxFC=0, maxCC=0;
+
+        nodes.forEach((nRow, i) => {
+            let fSum = 0, fCount = 0;
+            html += `<tr><td class="header-cell">${nRow.name}</td>`;
+            nodes.forEach((nCol, j) => {
+                const edge = edges.find(e => e.from === i && e.to === j);
+                const val = edge ? edge.weight : "";
+                html += `<td class="${edge ? 'cell-active' : ''}">${val}</td>`;
+                if(edge) { fSum += edge.weight; fCount++; colSums[j] += edge.weight; colCounts[j]++; }
+            });
+            html += `<td>${fSum}</td><td>${fCount}</td></tr>`;
+            maxFS = Math.max(maxFS, fSum); maxFC = Math.max(maxFC, fCount);
+        });
+
+        html += `<tr><td class="header-cell" style="color:blue">Σ Col</td>`;
+        colSums.forEach(s => { html += `<td>${s}</td>`; maxCS = Math.max(maxCS, s); });
+        html += `<td></td><td></td></tr><tr><td class="header-cell" style="color:green">Count Col</td>`;
+        colCounts.forEach(c => { html += `<td>${c}</td>`; maxCC = Math.max(maxCC, c); });
+        html += `<td></td><td></td></tr></table>`;
+
+        wrapper.innerHTML = html;
+        stats.innerHTML = `Max Σ Fila: ${maxFS} | Max Σ Col: ${maxCS}<br>Max Count Fila: ${maxFC} | Max Count Col: ${maxCC}`;
+    }
+</script>
+</body>
+</html>
