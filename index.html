@@ -17,6 +17,8 @@
     section{display:none; padding:10px; text-align:center;}
     section.active{display:flex; flex-direction:column; align-items:center; justify-content: flex-start;}
 
+    .section-footer { margin-top: 25px; font-size: 15px; color: #7f8c8d; border-top: 1px solid #ddd; padding-top: 10px; width: 100%; max-width: 900px; }
+
     /* TARJETAS Y CONTENIDO */
     .cover-card {
         background: white; width: 95%; max-width: 950px; padding: 20px;
@@ -29,7 +31,7 @@
     .cover-logo { margin: 20px auto; display: block; max-width: 450px; height: auto; }
     .cover-student { margin-top: 20px; font-size: 26px; font-weight: bold; color: #000; text-decoration: underline; }
 
-    /* SECCIÓN ALGORITMOS */
+    /* SECCIÓN ALGORITMOS INTACTA */
     .text-content { text-align: left; font-size: 19px; line-height: 1.6; color: #2c3e50; padding: 10px 30px; }
     .text-content h2 { color: #16a085; border-left: 5px solid #16a085; padding-left: 15px; margin-top: 25px; font-size: 24px;}
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 20px; border-radius: 10px; background: #000; }
@@ -37,22 +39,30 @@
 
     /* EDITOR DE GRAFOS */
     #canvas{border:3px solid #bdc3c7; background:white; margin-top:10px; border-radius: 10px; cursor: crosshair;}
-    .controls{margin:10px 0; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;}
+    .controls{margin:10px 0; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; align-items: center;}
     .btn-control { background: #95a5a6; color:white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
     .modoActivo{background:#e74c3c !important;}
     
-    /* ELEMENTOS SVG */
-    .edge { fill: none !important; stroke-linecap: round; }
-    .node-rect{stroke-width:3; stroke:#333; transition: all 0.2s;}
+    .edge { fill: none !important; stroke-linecap: round; cursor: pointer; stroke: #34495e; transition: stroke 0.2s;}
+    .edge:hover { stroke: #e74c3c; stroke-width: 5; }
+    .node-rect{stroke-width:3; stroke:#333; cursor: pointer;}
     .node-label{font-size:16px; font-weight:bold; fill:white; text-anchor:middle; dominant-baseline:middle; pointer-events: none;}
-    .weight{font-size:18px; fill:red; font-weight:bold; paint-order:stroke; stroke:white; stroke-width:4px;}
+    .weight{font-size:18px; fill:red; font-weight:bold; paint-order:stroke; stroke:white; stroke-width:4px; cursor: pointer;}
+
+    .help-group { display: flex; align-items: center; gap: 5px; cursor: pointer; background: #eee; padding: 5px 12px; border-radius: 20px; transition: 0.3s; }
+    .help-btn { background:#2980b9; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer; }
+
+    /* MODAL AMPLIADO */
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+    .modal-content { background-color: white; margin: 2% auto; padding: 25px; border-radius: 15px; width: 85%; max-width: 700px; text-align: left; position: relative; max-height: 90vh; overflow-y: auto;}
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .help-section { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .help-section h3 { color: #16a085; margin: 10px 0; font-size: 18px; }
 
     /* MATRIZ */
     #matrix-container { margin-top: 20px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 95%; max-width: 900px; overflow-x: auto;}
     .adj-table { border-collapse: collapse; margin: 0 auto; font-size: 16px; width: 100%;}
     .adj-table th, .adj-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-    .cell-active { background: #c8e6c9 !important; font-weight: bold; }
-    .header-cell { background: #eee !important; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -63,13 +73,49 @@
     <button onclick="show('grafos', this)">Grafos</button>
 </nav>
 
+<div id="helpModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeHelp()">&times;</span>
+        <h2 style="color: #2c3e50; border-bottom: 3px solid #16a085; padding-bottom: 10px;">Guía Detallada de Usuario</h2>
+        
+        <div class="help-section">
+            <h3>1. Construcción del Grafo</h3>
+            <p>• <b>Nodos:</b> Activa "Crear nodo" y haz clic en el espacio en blanco. El nombre por defecto es un número, pero puedes cambiarlo con "Nombrar nodo".</p>
+            <p>• <b>Aristas:</b> Activa "Crear arista", selecciona el nodo de origen y luego el de destino. Antes de crearla, ajusta el <b>Peso</b> y si es <b>Dirigida</b> en los controles superiores.</p>
+            <p>• <b>Edición:</b> Haz clic en el peso (número rojo) de una arista ya creada para modificar su valor o cambiar su dirección.</p>
+        </div>
+
+        <div class="help-section">
+            <h3>2. Eliminación y Limpieza</h3>
+            <p>• <b>Eliminar Nodo:</b> Borra un nodo y todas las aristas que lleguen o salgan de él. La matriz se reajustará automáticamente.</p>
+            <p>• <b>Eliminar Arista:</b> Haz clic directamente sobre la línea de la arista para borrarla.</p>
+        </div>
+
+        <div class="help-section">
+            <h3>3. Matriz de Adyacencia (Análisis)</h3>
+            <p>• <b>Σ (Fila/Columna):</b> Representa la sumatoria total de los pesos de las aristas conectadas.</p>
+            <p>• <b>Count:</b> Indica la cantidad total de aristas (grado de salida en filas, grado de entrada en columnas).</p>
+            <p>• <b>Máximos:</b> Al final de la matriz se calculan los valores más altos de Σ y Count para identificar los nodos con mayor tráfico o conexiones.</p>
+        </div>
+
+        <div class="help-section">
+            <h3>4. Gestión de Archivos JSON</h3>
+            <p>• <b>Guardar:</b> Descarga tu grafo (nombres, posiciones, pesos y conexiones) en un archivo .json. Puedes elegir el nombre que desees.</p>
+            <p>• <b>Cargar:</b> Sube un archivo .json guardado previamente para restaurar tu trabajo exacto, incluyendo la matriz de adyacencia.</p>
+        </div>
+
+        <button class="btn-control" style="background:#16a085; width: 100%; margin-top: 10px;" onclick="closeHelp()">¡Entendido!</button>
+    </div>
+</div>
+
 <section id="caratula" class="active">
     <div class="cover-card">
         <h1 class="cover-title">Análisis de Algoritmos</h1>
         <div class="cover-subtitle">MAT-361 | Paralelo 1 | I-2026</div>
         <img src="logo.png" alt="Logo UCB" class="cover-logo" onerror="this.src='https://lpz.ucb.edu.bo/wp-content/uploads/2020/09/Logo-UCB-LP-2020.png';">
-        <div class="cover-student">Estudiante: Alessandro Ronald Quenallata Condori | alessandro.quenallata@ucb.edu.bo</div>
+        <div class="cover-student">Estudiante: Alessandro Ronald Quenallata Condori</div>
     </div>
+    <div class="section-footer">Correo: alessandro.quenallata@ucb.edu.bo</div>
 </section>
 
 <section id="algoritmos">
@@ -84,23 +130,31 @@
             <p>Los algoritmos organizan el flujo de pensamiento mediante tres estructuras principales: Secuencia, Decisión (Si/No) y Repetición (Bucles).</p>
             <h2>4. Algoritmos Aplicados a Grafos</h2>
             <p>En el estudio de redes, los algoritmos son vitales para la optimización. Los recorridos definen cómo una computadora visita cada nodo de forma ordenada. La optimización permite resolver problemas complejos, como encontrar la ruta más corta entre dos puntos.</p>
-            <h2>5. Material de Apoyo</h2>
             <div class="video-container">
                 <iframe src="https://www.youtube.com/embed/vnNFiNVy9KM" allowfullscreen></iframe>
             </div>
-            <div class="cover-student">Estudiante: Alessandro Ronald Quenallata Condori | alessandro.quenallata@ucb.edu.bo</div>
         </div>
     </div>
+    <div class="section-footer">Correo: alessandro.quenallata@ucb.edu.bo</div>
 </section>
 
 <section id="grafos">
     <h2 style="font-size: 32px; margin-bottom: 10px;">Editor de Grafos e Interconectividad</h2>
     <div class="controls">
+        <div class="help-group" onclick="openHelp()">
+            <button class="help-btn">?</button>
+            <span style="font-size: 14px; font-weight: bold; color: #2c3e50;">Ayuda</span>
+        </div>
         <label>Peso: <input id="peso" type="number" value="1" style="width:60px;"></label>
         <label><input id="dirigida" type="checkbox" checked> Dirigida</label>
         <button id="btnNodo" class="btn-control" onclick="modoNodo()">Crear nodo</button>
+        <button id="btnEliminarN" class="btn-control" onclick="modoEliminarNodo()" style="background:#c0392b;">Eliminar nodo</button>
         <button id="btnArista" class="btn-control" onclick="modoArista()">Crear arista</button>
+        <button id="btnEliminarA" class="btn-control" onclick="modoEliminarArista()" style="background:#8e44ad;">Eliminar arista</button>
         <button id="btnNombre" class="btn-control" onclick="modoNombrar()">Nombrar nodo</button>
+        <button class="btn-control" style="background:#2ecc71;" onclick="exportarJSON()">Guardar JSON</button>
+        <button class="btn-control" style="background:#3498db;" onclick="document.getElementById('fileInput').click()">Cargar JSON</button>
+        <input type="file" id="fileInput" style="display:none" accept=".json" onchange="importarJSON(event)">
         <button class="btn-control" style="background:#e67e22;" onclick="generarMatriz()">Generar Matriz</button>
         <button class="btn-control" style="background:#e74c3c;" onclick="limpiarCanvas()">Limpiar</button>
     </div>
@@ -117,9 +171,8 @@
         <h3>Matriz de Adyacencia</h3>
         <div id="table-wrapper"></div>
         <div id="stats-wrapper" style="text-align: left; margin-top: 15px; font-weight: bold;"></div>
-        <p style="font-size: 14px; margin-top: 10px; color: #7f8c8d;">Hecho por Alessandro Ronald Quenallata Condori</p>
     </div>
-    <div class="cover-student">Estudiante: Alessandro Ronald Quenallata Condori | alessandro.quenallata@ucb.edu.bo</div>
+    <div class="section-footer">Correo: alessandro.quenallata@ucb.edu.bo</div>
 </section>
 
 <script>
@@ -130,18 +183,25 @@
         btn.classList.add("active-btn");
     }
 
+    function openHelp() { document.getElementById("helpModal").style.display = "block"; }
+    function closeHelp() { document.getElementById("helpModal").style.display = "none"; }
+
     const svg=document.getElementById("canvas");
-    let nodes=[], edges=[], selectedNode=null, modoActual=null;
+    let nodes=[], edges=[], selectedNode=null, modoActual=null, matrizActiva=false;
 
     function modoNodo(){ modoActual="nodo"; actualizarUI(); }
     function modoArista(){ modoActual="arista"; actualizarUI(); }
     function modoNombrar(){ modoActual="nombrar"; actualizarUI(); }
+    function modoEliminarArista(){ modoActual="eliminarA"; actualizarUI(); }
+    function modoEliminarNodo(){ modoActual="eliminarN"; actualizarUI(); }
     
     function actualizarUI(){
         document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("modoActivo"));
         if(modoActual==="nodo") document.getElementById("btnNodo").classList.add("modoActivo");
         if(modoActual==="arista") document.getElementById("btnArista").classList.add("modoActivo");
         if(modoActual==="nombrar") document.getElementById("btnNombre").classList.add("modoActivo");
+        if(modoActual==="eliminarA") document.getElementById("btnEliminarA").classList.add("modoActivo");
+        if(modoActual==="eliminarN") document.getElementById("btnEliminarN").classList.add("modoActivo");
         if(selectedNode !== null) nodes[selectedNode].rect.style.stroke = "#333";
         selectedNode = null;
     }
@@ -149,7 +209,7 @@
     function limpiarCanvas(){ 
         const defs = svg.querySelector("defs");
         svg.innerHTML = ''; svg.appendChild(defs);
-        nodes = []; edges = []; 
+        nodes = []; edges = []; matrizActiva = false;
         document.getElementById("matrix-container").style.display = "none";
         actualizarUI(); 
     }
@@ -161,53 +221,72 @@
         createNode(loc.x, loc.y);
     });
 
-    function createNode(x,y){
+    function createNode(x,y, nameManual = null){
         const id=nodes.length;
         const group = document.createElementNS("http://www.w3.org/2000/svg","g");
         const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
         rect.setAttribute("class","node-rect"); rect.setAttribute("fill", "#2c3e50"); rect.setAttribute("rx", 10); 
         const label = document.createElementNS("http://www.w3.org/2000/svg","text");
-        label.setAttribute("class","node-label"); label.textContent = id;
+        label.setAttribute("class","node-label"); 
+        const nodeName = nameManual !== null ? nameManual : id.toString();
+        label.textContent = nodeName;
         group.appendChild(rect); group.appendChild(label); svg.appendChild(group);
-        const nodeObj = { id, x, y, rect, label, name: id.toString(), group };
+        const nodeObj = { id, x, y, rect, label, name: nodeName, group };
         nodes.push(nodeObj);
         actualizarTamañoNodo(nodeObj);
-        group.addEventListener("click", ev => { ev.stopPropagation(); nodeClicked(id); });
+        group.addEventListener("click", ev => { ev.stopPropagation(); nodeClicked(nodes.indexOf(nodeObj)); });
     }
 
     function actualizarTamañoNodo(node) {
         const bbox = node.label.getBBox();
         const width = Math.max(60, bbox.width + 30);
-        const height = 45;
-        node.rect.setAttribute("width", width); node.rect.setAttribute("height", height);
-        node.rect.setAttribute("x", node.x - width/2); node.rect.setAttribute("y", node.y - height/2);
+        node.rect.setAttribute("width", width); node.rect.setAttribute("height", 45);
+        node.rect.setAttribute("x", node.x - width/2); node.rect.setAttribute("y", node.y - 22.5);
         node.label.setAttribute("x", node.x); node.label.setAttribute("y", node.y);
-        node.w = width; node.h = height;
+        node.w = width; node.h = 45;
     }
 
-    function nodeClicked(id){
-        if(modoActual==="nombrar"){
-            const n = prompt("Nuevo nombre:", nodes[id].name);
+    function nodeClicked(idx){
+        if(modoActual==="eliminarN"){
+            eliminarNodo(idx);
+        } else if(modoActual==="nombrar"){
+            const n = prompt("Nuevo nombre:", nodes[idx].name);
             if(n !== null){ 
-                nodes[id].name=n; nodes[id].label.textContent=n; 
-                actualizarTamañoNodo(nodes[id]); 
-                redibujarAristas(); // ESTA ES LA CLAVE PARA ADECUAR LAS FLECHAS
+                nodes[idx].name=n; nodes[idx].label.textContent=n; 
+                actualizarTamañoNodo(nodes[idx]); 
+                redibujarAristas();
             }
         } else if(modoActual==="arista"){
-            if(selectedNode === null){ selectedNode = id; nodes[id].rect.style.stroke = "red";
-            } else { drawEdge(selectedNode, id); actualizarUI(); }
+            if(selectedNode === null){ selectedNode = idx; nodes[idx].rect.style.stroke = "red";
+            } else { drawEdge(selectedNode, idx); actualizarUI(); }
         }
     }
 
+    function eliminarNodo(idx){
+        edges = edges.filter(e => e.from !== idx && e.to !== idx);
+        edges.forEach(e => {
+            if(e.from > idx) e.from--;
+            if(e.to > idx) e.to--;
+        });
+        nodes.splice(idx, 1);
+        redibujarTodo();
+    }
+
+    function redibujarTodo(){
+        const currentNodes = [...nodes];
+        const currentEdges = edges.filter(e => e.original);
+        limpiarCanvas();
+        currentNodes.forEach(n => createNode(n.x, n.y, n.name));
+        currentEdges.forEach(e => drawEdge(e.from, e.to, e.weight, e.dirigida, true));
+        if(matrizActiva) generarMatriz();
+    }
+
     function redibujarAristas() {
-        const currentEdges = [...edges];
-        // Limpiar aristas y pesos del DOM, pero no del array
+        const currentEdges = edges.filter(e => e.original);
         document.querySelectorAll('.edge, .weight').forEach(el => el.remove());
         edges = [];
-        currentEdges.forEach(e => {
-            // Solo procesamos las originales para evitar duplicar por las no dirigidas
-            if (e.original) drawEdge(e.from, e.to, e.weight, e.dirigida, true);
-        });
+        currentEdges.forEach(e => drawEdge(e.from, e.to, e.weight, e.dirigida, true));
+        if(matrizActiva) generarMatriz();
     }
 
     function getIntersection(node, targetX, targetY) {
@@ -218,27 +297,23 @@
     }
 
     function drawEdge(a, b, pOverride=null, dOverride=null, isRedraw=false){
-        const peso = pOverride || document.getElementById("peso").value || 1;
+        const peso = pOverride !== null ? pOverride : (document.getElementById("peso").value || 1);
         const dirigida = dOverride !== null ? dOverride : document.getElementById("dirigida").checked;
         const n1 = nodes[a], n2 = nodes[b];
         const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-        path.setAttribute("class","edge"); path.setAttribute("stroke", "#34495e"); path.setAttribute("stroke-width", "3");
+        path.setAttribute("class","edge"); path.setAttribute("stroke-width", "3");
         
         let d, end;
-        if(a === b){ // Bucle
-            d = `M ${n1.x-10} ${n1.y-nodeH(n1)} C ${n1.x-40} ${n1.y-80}, ${n1.x+40} ${n1.y-80}, ${n1.x+10} ${n1.y-nodeH(n1)}`;
+        if(a === b){
+            d = `M ${n1.x-10} ${n1.y-22} C ${n1.x-40} ${n1.y-80}, ${n1.x+40} ${n1.y-80}, ${n1.x+10} ${n1.y-22}`;
         } else {
-            const yaExisteIda = edges.find(e => e.from === b && e.to === a);
-            if(yaExisteIda){ 
-                const mx = (n1.x + n2.x)/2, my = (n1.y + n2.y)/2;
-                const dx = n2.x - n1.x, dy = n2.y - n1.y;
-                const len = Math.sqrt(dx*dx + dy*dy) || 1;
+            const rev = edges.find(e => e.from === b && e.to === a);
+            if(rev){
+                const mx = (n1.x + n2.x)/2, my = (n1.y + n2.y)/2, dx = n2.x - n1.x, dy = n2.y - n1.y, len = Math.sqrt(dx*dx + dy*dy) || 1;
                 const cx = mx + (-dy/len) * 50, cy = my + (dx/len) * 50;
-                end = getIntersection(n2, cx, cy);
-                d = `M ${n1.x} ${n1.y} Q ${cx} ${cy} ${end.x} ${end.y}`;
+                end = getIntersection(n2, cx, cy); d = `M ${n1.x} ${n1.y} Q ${cx} ${cy} ${end.x} ${end.y}`;
             } else {
-                end = getIntersection(n2, n1.x, n1.y);
-                d = `M ${n1.x} ${n1.y} L ${end.x} ${end.y}`;
+                end = getIntersection(n2, n1.x, n1.y); d = `M ${n1.x} ${n1.y} L ${end.x} ${end.y}`;
             }
         }
         
@@ -253,14 +328,64 @@
         txt.setAttribute("text-anchor", "middle"); txt.textContent = peso;
         svg.appendChild(txt);
 
-        edges.push({from: a, to: b, weight: parseFloat(peso), dirigida, original: true});
+        const edgeData = {from: a, to: b, weight: parseFloat(peso), dirigida, original: true};
+        edges.push(edgeData);
         if(!dirigida) edges.push({from: b, to: a, weight: parseFloat(peso), dirigida, original: false});
+
+        const interactFunc = (ev) => {
+            ev.stopPropagation();
+            if(modoActual === "eliminarA"){
+                edges = edges.filter(e => !( (e.from === a && e.to === b) || (e.from === b && e.to === a) ));
+                redibujarAristas();
+            } else if(modoActual !== "eliminarN"){
+                const nuevoPeso = prompt("Modificar Peso:", edgeData.weight);
+                if(nuevoPeso !== null) {
+                    edgeData.weight = parseFloat(nuevoPeso);
+                    edgeData.dirigida = confirm("¿Desea que sea dirigida?");
+                    redibujarAristas();
+                }
+            }
+        };
+        path.addEventListener("click", interactFunc);
+        txt.addEventListener("click", interactFunc);
+        if(!isRedraw && matrizActiva) generarMatriz();
     }
 
-    function nodeH(n) { return n.h / 2; }
+    function exportarJSON() {
+        const nombre = prompt("Nombre del archivo:", "mi_grafo");
+        if (!nombre) return;
+        const data = {
+            nodes: nodes.map(n => ({ x: n.x, y: n.y, name: n.name })),
+            edges: edges.filter(e => e.original).map(e => ({ from: e.from, to: e.to, weight: e.weight, dirigida: e.dirigida }))
+        };
+        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = nombre + ".json";
+        link.click();
+    }
+
+    function importarJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = JSON.parse(e.target.result);
+            limpiarCanvas();
+            data.nodes.forEach(n => createNode(n.x, n.y, n.name));
+            data.edges.forEach(e => drawEdge(e.from, e.to, e.weight, e.dirigida, true));
+            generarMatriz();
+        };
+        reader.readAsText(file);
+        event.target.value = ""; 
+    }
 
     function generarMatriz() {
-        if (nodes.length === 0) return;
+        if (nodes.length === 0) { 
+            document.getElementById("matrix-container").style.display = "none";
+            return; 
+        }
+        matrizActiva = true;
         const container = document.getElementById("matrix-container");
         const wrapper = document.getElementById("table-wrapper");
         const stats = document.getElementById("stats-wrapper");
@@ -293,10 +418,11 @@
         html += `<td></td><td></td></tr></table>`;
 
         wrapper.innerHTML = html;
-        stats.innerHTML = `Max Σ Fila: ${maxFS} | Max Σ Col: ${maxCS}<br>Max Count Fila: ${maxFC} | Max Count Col: ${maxCC}`;
+        stats.innerHTML = `Máximo Σ Fila: ${maxFS} | Máximo Σ Col: ${maxCS}<br>Máximo Count Fila: ${maxFC} | Máximo Count Col: ${maxCC}`;
     }
-</script>
 
+    window.onclick = event => { if (event.target == document.getElementById("helpModal")) closeHelp(); }
+</script>
 </body>
 </html>
 
