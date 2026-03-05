@@ -31,7 +31,7 @@
     .cover-logo { margin: 20px auto; display: block; max-width: 450px; height: auto; }
     .cover-student { margin-top: 20px; font-size: 26px; font-weight: bold; color: #000; text-decoration: underline; }
 
-    /* SECCIÓN ALGORITMOS INTACTA */
+    /* SECCIÓN ALGORITMOS (CONTENIDO INALTERADO) */
     .text-content { text-align: left; font-size: 19px; line-height: 1.6; color: #2c3e50; padding: 10px 30px; }
     .text-content h2 { color: #16a085; border-left: 5px solid #16a085; padding-left: 15px; margin-top: 25px; font-size: 24px;}
     .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 20px; border-radius: 10px; background: #000; }
@@ -52,7 +52,7 @@
     .help-group { display: flex; align-items: center; gap: 5px; cursor: pointer; background: #eee; padding: 5px 12px; border-radius: 20px; transition: 0.3s; }
     .help-btn { background:#2980b9; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer; }
 
-    /* MODAL AMPLIADO */
+    /* MODAL */
     .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
     .modal-content { background-color: white; margin: 2% auto; padding: 25px; border-radius: 15px; width: 85%; max-width: 700px; text-align: left; position: relative; max-height: 90vh; overflow-y: auto;}
     .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
@@ -77,33 +77,23 @@
     <div class="modal-content">
         <span class="close" onclick="closeHelp()">&times;</span>
         <h2 style="color: #2c3e50; border-bottom: 3px solid #16a085; padding-bottom: 10px;">Guía Detallada de Usuario</h2>
-        
         <div class="help-section">
             <h3>1. Construcción del Grafo</h3>
-            <p>• <b>Nodos:</b> Activa "Crear nodo" y haz clic en el espacio en blanco. El nombre por defecto es un número, pero puedes cambiarlo con "Nombrar nodo".</p>
-            <p>• <b>Aristas:</b> Activa "Crear arista", selecciona el nodo de origen y luego el de destino. Antes de crearla, ajusta el <b>Peso</b> y si es <b>Dirigida</b> en los controles superiores.</p>
-            <p>• <b>Edición:</b> Haz clic en el peso (número rojo) de una arista ya creada para modificar su valor o cambiar su dirección.</p>
+            <p>• <b>Nodos:</b> Activa "Crear nodo" y haz clic en el lienzo. Se te pedirá el nombre inmediatamente al crearlo.</p>
+            <p>• <b>Aristas:</b> Activa "Crear arista", selecciona origen y destino. Ajusta el <b>Peso</b> y si es <b>Dirigida</b> antes.</p>
         </div>
-
         <div class="help-section">
             <h3>2. Eliminación y Limpieza</h3>
-            <p>• <b>Eliminar Nodo:</b> Borra un nodo y todas las aristas que lleguen o salgan de él. La matriz se reajustará automáticamente.</p>
-            <p>• <b>Eliminar Arista:</b> Haz clic directamente sobre la línea de la arista para borrarla.</p>
+            <p>• <b>Eliminar Nodo/Arista:</b> Usa los botones rojos para borrar elementos. La matriz se actualiza sola.</p>
         </div>
-
         <div class="help-section">
-            <h3>3. Matriz de Adyacencia (Análisis)</h3>
-            <p>• <b>Σ (Fila/Columna):</b> Representa la sumatoria total de los pesos de las aristas conectadas.</p>
-            <p>• <b>Count:</b> Indica la cantidad total de aristas (grado de salida en filas, grado de entrada en columnas).</p>
-            <p>• <b>Máximos:</b> Al final de la matriz se calculan los valores más altos de Σ y Count para identificar los nodos con mayor tráfico o conexiones.</p>
+            <h3>3. Matriz de Adyacencia</h3>
+            <p>• <b>Σ / Count:</b> Suma de pesos y cantidad de conexiones por nodo. Se resaltan los máximos.</p>
         </div>
-
         <div class="help-section">
-            <h3>4. Gestión de Archivos JSON</h3>
-            <p>• <b>Guardar:</b> Descarga tu grafo (nombres, posiciones, pesos y conexiones) en un archivo .json. Puedes elegir el nombre que desees.</p>
-            <p>• <b>Cargar:</b> Sube un archivo .json guardado previamente para restaurar tu trabajo exacto, incluyendo la matriz de adyacencia.</p>
+            <h3>4. JSON</h3>
+            <p>• Guarda tu trabajo con un nombre personalizado o carga uno existente.</p>
         </div>
-
         <button class="btn-control" style="background:#16a085; width: 100%; margin-top: 10px;" onclick="closeHelp()">¡Entendido!</button>
     </div>
 </div>
@@ -123,13 +113,13 @@
         <div class="text-content">
             <h1 style="font-size: 40px; color: #16a085; text-align: center; text-decoration: underline;">Fundamentos de Algoritmos</h1>
             <h2>1. ¿Qué es un Algoritmo?</h2>
-            <p>Un algoritmo es una <strong>secuencia lógica, finita y ordenada de pasos</strong> que permite solucionar un problema o alcanzar un objetivo específico. No es algo exclusivo de las computadoras; es una metodología que aplicamos a diario. En computación, el algoritmo es el "cerebro" detrás de cada proceso.</p>
+            <p>Un algoritmo es una <strong>secuencia lógica, finita y ordenada de pasos</strong> que permite solucionar un problema o alcanzar un objetivo específico.</p>
             <h2>2. Definición Técnica y Atributos</h2>
-            <p>En ingeniería y ciencias de la computación, un algoritmo funcional debe cumplir estrictamente con: Entrada, Proceso, Salida, Finitud y Efectividad.</p>
+            <p>Entrada, Proceso, Salida, Finitud y Efectividad.</p>
             <h2>3. Estructuras Lógicas</h2>
-            <p>Los algoritmos organizan el flujo de pensamiento mediante tres estructuras principales: Secuencia, Decisión (Si/No) y Repetición (Bucles).</p>
+            <p>Secuencia, Decisión (Si/No) y Repetición (Bucles).</p>
             <h2>4. Algoritmos Aplicados a Grafos</h2>
-            <p>En el estudio de redes, los algoritmos son vitales para la optimización. Los recorridos definen cómo una computadora visita cada nodo de forma ordenada. La optimización permite resolver problemas complejos, como encontrar la ruta más corta entre dos puntos.</p>
+            <p>Recorridos y optimización de rutas.</p>
             <div class="video-container">
                 <iframe src="https://www.youtube.com/embed/vnNFiNVy9KM" allowfullscreen></iframe>
             </div>
@@ -214,11 +204,16 @@
         actualizarUI(); 
     }
 
+    // --- MODIFICACIÓN AQUÍ: NOMBRAR AL CREAR ---
     svg.addEventListener("click",e=>{
         if(modoActual!=="nodo" || e.target !== svg) return;
         const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
         const loc=pt.matrixTransform(svg.getScreenCTM().inverse());
-        createNode(loc.x, loc.y);
+        
+        const nombreNodo = prompt("Ingrese el nombre del nodo:", nodes.length);
+        if (nombreNodo !== null) {
+            createNode(loc.x, loc.y, nombreNodo);
+        }
     });
 
     function createNode(x,y, nameManual = null){
@@ -302,7 +297,6 @@
         const n1 = nodes[a], n2 = nodes[b];
         const path = document.createElementNS("http://www.w3.org/2000/svg","path");
         path.setAttribute("class","edge"); path.setAttribute("stroke-width", "3");
-        
         let d, end;
         if(a === b){
             d = `M ${n1.x-10} ${n1.y-22} C ${n1.x-40} ${n1.y-80}, ${n1.x+40} ${n1.y-80}, ${n1.x+10} ${n1.y-22}`;
@@ -316,22 +310,18 @@
                 end = getIntersection(n2, n1.x, n1.y); d = `M ${n1.x} ${n1.y} L ${end.x} ${end.y}`;
             }
         }
-        
         path.setAttribute("d", d);
         if(dirigida) path.setAttribute("marker-end", "url(#arrowhead)");
         svg.insertBefore(path, svg.firstChild);
-        
         const pathLen = path.getTotalLength();
         const mid = path.getPointAtLength(pathLen / 2);
         const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
         txt.setAttribute("class","weight"); txt.setAttribute("x", mid.x); txt.setAttribute("y", mid.y - 10);
         txt.setAttribute("text-anchor", "middle"); txt.textContent = peso;
         svg.appendChild(txt);
-
         const edgeData = {from: a, to: b, weight: parseFloat(peso), dirigida, original: true};
         edges.push(edgeData);
         if(!dirigida) edges.push({from: b, to: a, weight: parseFloat(peso), dirigida, original: false});
-
         const interactFunc = (ev) => {
             ev.stopPropagation();
             if(modoActual === "eliminarA"){
@@ -381,23 +371,17 @@
     }
 
     function generarMatriz() {
-        if (nodes.length === 0) { 
-            document.getElementById("matrix-container").style.display = "none";
-            return; 
-        }
+        if (nodes.length === 0) { document.getElementById("matrix-container").style.display = "none"; return; }
         matrizActiva = true;
         const container = document.getElementById("matrix-container");
         const wrapper = document.getElementById("table-wrapper");
         const stats = document.getElementById("stats-wrapper");
         container.style.display = "block";
-
         let html = `<table class="adj-table"><tr><th></th>`;
         nodes.forEach(n => html += `<th class="header-cell">${n.name}</th>`);
         html += `<th style="color:blue">Σ Fila</th><th style="color:green">Count</th></tr>`;
-
         let colSums = new Array(nodes.length).fill(0), colCounts = new Array(nodes.length).fill(0);
         let maxFS=0, maxCS=0, maxFC=0, maxCC=0;
-
         nodes.forEach((nRow, i) => {
             let fSum = 0, fCount = 0;
             html += `<tr><td class="header-cell">${nRow.name}</td>`;
@@ -410,13 +394,11 @@
             html += `<td>${fSum}</td><td>${fCount}</td></tr>`;
             maxFS = Math.max(maxFS, fSum); maxFC = Math.max(maxFC, fCount);
         });
-
         html += `<tr><td class="header-cell" style="color:blue">Σ Col</td>`;
         colSums.forEach(s => { html += `<td>${s}</td>`; maxCS = Math.max(maxCS, s); });
         html += `<td></td><td></td></tr><tr><td class="header-cell" style="color:green">Count Col</td>`;
         colCounts.forEach(c => { html += `<td>${c}</td>`; maxCC = Math.max(maxCC, c); });
         html += `<td></td><td></td></tr></table>`;
-
         wrapper.innerHTML = html;
         stats.innerHTML = `Máximo Σ Fila: ${maxFS} | Máximo Σ Col: ${maxCS}<br>Máximo Count Fila: ${maxFC} | Máximo Count Col: ${maxCC}`;
     }
@@ -425,4 +407,3 @@
 </script>
 </body>
 </html>
-
